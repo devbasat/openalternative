@@ -1,36 +1,40 @@
 {
   "version": 2,
-  "rewrites": [
-    {
-      "source": "/alternatives/rss.xml",
-      "destination": "/rss/alternatives.xml"
-    },
-    {
-      "source": "/_proxy/posthog/ingest/static/:path*",
-      "destination": "/static/:path*"
-    },
-    {
-      "source": "/_proxy/posthog/ingest/:path*",
-      "destination": "/:path*"
-    },
-    {
-      "source": "/_proxy/posthog/ingest/decide",
-      "destination": "/decide"
-    }
-  ],
-  "env": {
-    "API_URL": "https://your-api.example.com"
-  },
   "builds": [
     {
-      "src": "package.json",
+      "src": "apps/web/**",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    },
+    {
+      "src": "apps/admin/**",
+      "use": "@vercel/next"
+    },
+    {
+      "src": "api/**/*.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "api/index.js"
+      "src": "/_proxy/posthog/(.*)",
+      "dest": "/api/posthog/$1"
+    },
+    {
+      "src": "/alternatives/rss.xml",
+      "dest": "/api/rss"
     }
-  ]
+  ],
+  "env": {
+    "NEXT_PUBLIC_SITE_URL": "https://your-deployment-url.vercel.app",
+    "NEXT_PUBLIC_POSTHOG_API_KEY": "your-posthog-api-key",
+    "NEXT_PUBLIC_POSTHOG_API_HOST": "https://posthog.yourdomain.com",
+    "DATABASE_URL": "your-database-url",
+    "AUTH_SECRET": "your-auth-secret",
+    "AUTH_GOOGLE_ID": "your-google-id",
+    "AUTH_GOOGLE_SECRET": "your-google-secret"
+  }
 }
+
