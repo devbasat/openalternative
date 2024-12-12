@@ -1,0 +1,36 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/alternatives/rss.xml",
+      "destination": "/rss/alternatives.xml"
+    },
+    {
+      "source": "/_proxy/posthog/ingest/static/:path*",
+      "destination": "/static/:path*"
+    },
+    {
+      "source": "/_proxy/posthog/ingest/:path*",
+      "destination": "/:path*"
+    },
+    {
+      "source": "/_proxy/posthog/ingest/decide",
+      "destination": "/decide"
+    }
+  ],
+  "env": {
+    "API_URL": "https://your-api.example.com"
+  },
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "api/index.js"
+    }
+  ]
+}
